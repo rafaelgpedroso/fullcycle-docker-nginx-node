@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  mysql:
+  db:
     image: mysql:5.7
     command: --innodb-use-native-aio=0
     container_name: db
@@ -17,6 +17,11 @@ services:
       - "3306"
     networks:
       - minha_rede
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
   node:
     build: 
@@ -27,7 +32,8 @@ services:
     volumes:
       - ./node:/usr/src/app
     depends_on:
-      - mysql
+      db:
+        condition: service_healthy
     networks:
       - minha_rede
 
@@ -41,6 +47,8 @@ services:
       - minha_rede
     ports:
       - "8080:80"
+    depends_on:
+      - node
 
 networks:
   minha_rede:
