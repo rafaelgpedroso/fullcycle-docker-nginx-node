@@ -14,7 +14,6 @@ const connection = mysql.createConnection({
 // Rota para listar os registros
 app.get('/', (req, res) => {
     connection.query(`INSERT INTO people(name) values('Rafael')`)
-    connection.query(`INSERT INTO people(name) values('Giovani')`)
     
     connection.query('SELECT name FROM people', (error, results) => {
         if (error) {
