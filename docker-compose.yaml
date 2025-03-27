@@ -18,10 +18,10 @@ services:
     networks:
       - minha_rede
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 5s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "sh", "-c", "mysql -h localhost -u root -proot -e 'USE nodedb;'"]
+      interval: 10s
+      timeout: 20s
+      retries: 5
 
   node:
     build: 
@@ -30,7 +30,7 @@ services:
     image: rafaelgpedroso/node
     container_name: node
     volumes:
-      - ./node:/usr/src/app
+      - ./node/main:/usr/src/app/main
     depends_on:
       db:
         condition: service_healthy
